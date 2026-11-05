@@ -1,0 +1,15 @@
+{
+  "name": "google-search-console-mcp",
+  "displayName": "Google Search Console MCP",
+  "version": "0.3.0",
+  "description": "Query Google Search Console from your AI assistant: search analytics, URL inspection, indexing status and sitemaps.",
+  "author": {
+    "name": "Bilal Naseer"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/bilalnaseer/google-search-console-mcp",
+  "repository": "https://github.com/bilalnaseer/google-search-console-mcp",
+  "keywords": ["seo", "google-search-console", "analytics", "mcp", "gsc"],
+  "logo": "./assets/logo.png",
+  "mcpServers": "./.mcp.json"
+}

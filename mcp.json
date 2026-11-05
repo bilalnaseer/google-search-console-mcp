@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "google-search-console-mcp": {
+      "command": "npx",
+      "args": ["-y", "google-search-console-mcp"],
+      "env": {
+        "WSP_SERVICE_ACCOUNT_FILE": "",
+        "WSP_CLIENT_ID": "",
+        "WSP_CLIENT_SECRET": "",
+        "WSP_OAUTH_FILE": "",
+        "WSP_DATA_MODE": "all"
+      }
+    }
+  }
+}
