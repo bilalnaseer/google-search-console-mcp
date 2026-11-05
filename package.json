@@ -1,6 +1,6 @@
 {
   "name": "google-gsc-mcp",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Google Search Console MCP server for Claude, Cursor and any MCP client. Query search analytics, sitemaps and URL inspection.",
   "type": "module",
   "license": "MIT",

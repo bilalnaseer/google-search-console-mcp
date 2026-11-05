@@ -1,5 +1,9 @@
 # Google Search Console MCP Server
 
+[![npm version](https://img.shields.io/npm/v/google-gsc-mcp)](https://www.npmjs.com/package/google-gsc-mcp)
+[![npm downloads](https://img.shields.io/npm/dm/google-gsc-mcp)](https://www.npmjs.com/package/google-gsc-mcp)
+[![license](https://img.shields.io/github/license/bilalnaseer/google-search-console-mcp)](LICENSE)
+
 Talk to your [Google Search Console](https://search.google.com/search-console/about) data in plain English from Claude, Cursor, Codex, Gemini CLI or any other MCP app.
 
 > *"Which keywords lost clicks this month?"*
