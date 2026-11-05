@@ -25,7 +25,7 @@ You need [Node.js](https://nodejs.org/) 20 or newer. Run `node --version` to che
   "mcpServers": {
     "search-console": {
       "command": "npx",
-      "args": ["-y", "google-search-console-mcp"],
+      "args": ["-y", "google-gsc-mcp"],
       "env": {
         "WSP_CLIENT_ID": "your-client-id.apps.googleusercontent.com",
         "WSP_CLIENT_SECRET": "your-client-secret"
@@ -116,7 +116,7 @@ File: `~/.codex/config.toml`
 ```toml
 [mcp_servers.search-console]
 command = "npx"
-args = ["-y", "google-search-console-mcp"]
+args = ["-y", "google-gsc-mcp"]
 enabled = true
 env = { WSP_CLIENT_ID = "your-client-id.apps.googleusercontent.com", WSP_CLIENT_SECRET = "your-client-secret" }
 ```

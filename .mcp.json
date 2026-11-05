@@ -2,7 +2,7 @@
   "mcpServers": {
     "google-search-console-mcp": {
       "command": "npx",
-      "args": ["-y", "google-search-console-mcp"],
+      "args": ["-y", "google-gsc-mcp"],
       "env": {
         "WSP_SERVICE_ACCOUNT_FILE": "",
         "WSP_CLIENT_ID": "",

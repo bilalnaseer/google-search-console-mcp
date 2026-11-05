@@ -1,18 +1,26 @@
 {
-  "name": "google-search-console-mcp",
+  "name": "google-gsc-mcp",
   "version": "0.6.0",
-  "description": "Google Search Console integration for Model Context Protocol (MCP)",
+  "description": "Google Search Console MCP server for Claude, Cursor and any MCP client. Query search analytics, sitemaps and URL inspection.",
   "type": "module",
   "license": "MIT",
   "author": "Bilal Naseer",
   "keywords": [
     "mcp",
-    "google search console",
+    "mcp-server",
+    "google search console mcp",
+    "google-search-console",
+    "gsc mcp",
+    "search console mcp server",
     "seo",
     "claude",
     "search analytics"
   ],
   "homepage": "https://github.com/bilalnaseer/google-search-console-mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilalnaseer/google-search-console-mcp.git"
+  },
   "bugs": "https://github.com/bilalnaseer/google-search-console-mcp/issues",
   "bin": {
     "google-search-console-mcp": "dist/index.js"
