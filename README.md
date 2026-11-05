@@ -6,19 +6,26 @@ Talk to your [Google Search Console](https://search.google.com/search-console/ab
 > *"Are my top 10 pages indexed?"*
 > *"Compare January with February and tell me what changed."*
 
-No Python needed. One `npx` command and you're running.
-
-**Jump to:** [Quick start](#quick-start) · [Setup in detail](#setup-in-detail) · [Tools](#tools) · [Settings](#settings) · [Example prompts](#example-prompts) · [Troubleshooting](#troubleshooting) · [Docker & remote](#docker--remote)
+**Jump to:** [Setup](#setup) · [Tools](#tools) · [Settings](#settings) · [Example prompts](#example-prompts) · [Troubleshooting](#troubleshooting) · [Docker & remote](#docker--remote)
 
 ---
 
-## Quick start
+## Setup
 
-You need [Node.js](https://nodejs.org/) 20 or newer. Run `node --version` to check.
+You need [Node.js](https://nodejs.org/) 20 or newer (`node --version` to check). Setup takes about 3 minutes and you only do it once.
 
-**1. Get a Google login file.** Follow [Step 1](#step-1-get-a-google-login-file) below. It takes about 3 minutes.
+### 1. Create a Client ID and Secret
 
-**2. Add this to your AI app's MCP config:**
+1. Open [Google Cloud Console](https://console.cloud.google.com/), then create a project (or pick one).
+2. [Enable the Search Console API](https://console.cloud.google.com/apis/library/searchconsole.googleapis.com).
+3. Open **Google Auth Platform** and set up the consent screen: enter an app name and your email, and choose **External** as the audience.
+4. Under **Audience → Test users**, click **+ Add users** and add the Google account that has access to your Search Console sites. While the app is in *Testing*, only these accounts can sign in.
+5. Go to **Clients → Create client**, set **Application type** to **Desktop app**, and click **Create**.
+6. Copy the **Client ID** and **Client secret**. The secret can't be shown again after you close the dialog.
+
+This project doesn't ship a login of its own, so your data never goes through anyone else's Google project.
+
+### 2. Add this to your app's MCP config
 
 ```json
 {
@@ -35,78 +42,13 @@ You need [Node.js](https://nodejs.org/) 20 or newer. Run `node --version` to che
 }
 ```
 
-**3. Restart the app and ask:** *"List my Search Console websites."*
-
-The first time, a browser window opens so you can sign in to Google. After that you stay signed in.
-
----
-
-## Setup in detail
-
-### Step 1: Get a Google login file
-
-Both options start the same way:
-
-1. Open [Google Cloud Console](https://console.cloud.google.com/) and create or pick a project.
-2. [Turn on the Search Console API](https://console.cloud.google.com/apis/library/searchconsole.googleapis.com).
-
-Then pick **one** option.
-
-#### Option A: Sign in with your Google account (recommended)
-
-3. Go to [Credentials](https://console.cloud.google.com/apis/credentials) → **Create Credentials** → **OAuth client ID**.
-4. Set up the consent screen, choose **Desktop app**, then click **Create**.
-5. Copy the **Client ID** and **Client secret** shown after creation.
-6. Set `WSP_CLIENT_ID` and `WSP_CLIENT_SECRET` to those values. (Prefer a file? Download the JSON and set `WSP_OAUTH_FILE` to its path instead.)
-
-<details>
-<summary><strong>Step-by-step Google Cloud setup (about 3 minutes)</strong></summary>
-
-You create your own login file. This project doesn't ship one, so your data never goes through anyone else's Google project.
-
-1. **Pick a project.** Open [Google Cloud Console](https://console.cloud.google.com/), click the project picker at the top, and choose **New Project** (or select an existing one).
-2. **Turn on the API.** Open the [Search Console API page](https://console.cloud.google.com/apis/library/searchconsole.googleapis.com) and click **Enable**. It then shows *Status: Enabled*.
-3. **Set up the consent screen.** Open **Google Auth Platform**. If it asks you to get started, fill in an app name, your support email, and choose **External** as the audience.
-4. **Add yourself as a test user.** In **Google Auth Platform → Audience → Test users**, click **+ Add users** and add the Google account that has access to your Search Console sites. While the app is in *Testing*, only these accounts can sign in.
-5. **Create the OAuth client.** Go to **Google Auth Platform → Clients → Create client**. Set **Application type** to **Desktop app**, give it any name, and click **Create**.
-6. **Copy the credentials.** In the dialog that appears, copy the **Client ID** and **Client secret**. You can't view the secret again after closing it, so you may also click **Download JSON** as a backup.
-7. **Add them to your config.** Set `WSP_CLIENT_ID` and `WSP_CLIENT_SECRET` in the `env` block. Alternatively, save the JSON somewhere safe and set `WSP_OAUTH_FILE` to its full path, e.g. `/Users/you/secrets/client_secrets.json`.
-8. **Sign in.** Restart your app and ask *"Run wsp_login_again_gsc"*. In the browser, pick the account you added in step 4. If Google shows a warning that the app isn't verified, click **Advanced → Go to (your app name)**.
-9. **Check it works.** Ask *"List my Search Console websites"*.
-
-Never commit or share your JSON file or the saved token.
-
-</details>
-
-#### Option B: Service account (for automation and teams)
-
-3. Go to [Credentials](https://console.cloud.google.com/apis/credentials) → **Create Credentials** → **Service Account**.
-4. Open the **Keys** tab → **Add Key** → **Create new key** → **JSON**, and download it.
-5. Keep the file somewhere safe, e.g. `~/Documents/service_account.json`.
-6. In Search Console, open **Settings → Users and permissions → Add user**, paste the service account's email and give it **Full** access.
-7. Use this `env` block instead of the one in the Quick start:
-
-```json
-"env": {
-  "WSP_SERVICE_ACCOUNT_FILE": "/full/path/to/service_account.json",
-  "WSP_SERVICE_ACCOUNT_ONLY": "true"
-}
-```
-
-> No file at all? If neither option is set, the server falls back to [Google's default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) (`gcloud auth application-default login`, Cloud Run, GKE, Workload Identity Federation).
-
-### Step 2: Add the server to your app
-
-Always use **full paths** to your files.
-
 | App | Config file |
 |---|---|
 | Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
 | Claude Desktop (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
+| Claude Code | `claude mcp add search-console -e WSP_CLIENT_ID=... -e WSP_CLIENT_SECRET=... -- npx -y google-gsc-mcp` |
 | Cursor | `~/.cursor/mcp.json` |
 | Gemini CLI, Antigravity, others | Your app's MCP config file |
-
-Paste the JSON from the [Quick start](#quick-start) into the file.
 
 <details>
 <summary><strong>Codex CLI</strong> uses TOML instead</summary>
@@ -121,7 +63,60 @@ enabled = true
 env = { WSP_CLIENT_ID = "your-client-id.apps.googleusercontent.com", WSP_CLIENT_SECRET = "your-client-secret" }
 ```
 
-Service account: `env = { WSP_SERVICE_ACCOUNT_FILE = "/full/path/to/service_account.json", WSP_SERVICE_ACCOUNT_ONLY = "true" }`
+</details>
+
+### 3. Restart and sign in
+
+**Fully quit** your app and reopen it (on macOS press `Cmd+Q`; closing the window isn't enough). Then ask: *"List my Search Console websites."*
+
+The first time, a browser window opens so you can sign in to Google. Pick the account you added as a test user. If Google warns that the app isn't verified, click **Advanced → Go to (your app name)**. After that you stay signed in.
+
+If something goes wrong, ask *"Run wsp_show_status_gsc"*. It shows whether you're signed in and the exact error.
+
+### Other ways to sign in
+
+<details>
+<summary><strong>Service account</strong> (automation and teams)</summary>
+
+1. In [Credentials](https://console.cloud.google.com/apis/credentials), choose **Create Credentials → Service Account**.
+2. Open the **Keys** tab → **Add Key → Create new key → JSON**, and download it to a safe place.
+3. In Search Console, open **Settings → Users and permissions → Add user**, paste the service account's email and give it **Full** access.
+4. Use this `env` block instead:
+
+```json
+"env": {
+  "WSP_SERVICE_ACCOUNT_FILE": "/full/path/to/service_account.json",
+  "WSP_SERVICE_ACCOUNT_ONLY": "true"
+}
+```
+
+With neither a client nor a service account set, the server falls back to [Google's default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) (`gcloud auth application-default login`, Cloud Run, GKE, Workload Identity Federation).
+
+</details>
+
+<details>
+<summary><strong>Use a downloaded JSON file</strong> instead of Client ID and Secret</summary>
+
+Click **Download JSON** when you create the client, save it somewhere safe, and set `WSP_OAUTH_FILE` to its full path, e.g. `"WSP_OAUTH_FILE": "/Users/you/secrets/client_secrets.json"`. It is ignored if `WSP_CLIENT_ID` and `WSP_CLIENT_SECRET` are set.
+
+</details>
+
+<details>
+<summary><strong>Multiple Google accounts</strong></summary>
+
+Add one MCP entry per account, each with its own `WSP_TOKEN_DIR`, so the saved logins don't overwrite each other. All entries can share the same Client ID and secret. Add every account as a test user.
+
+```json
+"search-console-work": {
+  "command": "npx",
+  "args": ["-y", "google-gsc-mcp"],
+  "env": {
+    "WSP_CLIENT_ID": "...",
+    "WSP_CLIENT_SECRET": "...",
+    "WSP_TOKEN_DIR": "/Users/you/.gsc-tokens/work"
+  }
+}
+```
 
 </details>
 
@@ -138,12 +133,6 @@ npm run build
 Then use `"command": "node"` and `"args": ["/full/path/to/google-search-console-mcp/dist/index.js"]` in your config.
 
 </details>
-
-### Step 3: Restart and test
-
-**Fully quit** your app and reopen it. On macOS press `Cmd+Q`; closing the window isn't enough.
-
-Then ask: *"List my Search Console websites."* If it doesn't work, ask *"Run wsp_show_status_gsc"*. It shows whether you're signed in and the exact error.
 
 ---
 
@@ -191,10 +180,10 @@ Put these in the `env` block of your config.
 
 | Setting | Default | What it does |
 |---|---|---|
-| `WSP_CLIENT_ID` | — | OAuth Client ID (Option A, no JSON file needed) |
+| `WSP_CLIENT_ID` | — | OAuth Client ID |
 | `WSP_CLIENT_SECRET` | — | OAuth Client secret (use together with `WSP_CLIENT_ID`) |
 | `WSP_OAUTH_FILE` | — | Alternative to the two above: full path to your OAuth `client_secrets.json`. Ignored if ID and secret are set |
-| `WSP_SERVICE_ACCOUNT_FILE` | — | Full path to your service account key (Option B) |
+| `WSP_SERVICE_ACCOUNT_FILE` | — | Full path to your service account key |
 | `WSP_SERVICE_ACCOUNT_ONLY` | `false` | `true` skips the Google login and uses only the service account |
 | `WSP_DATA_MODE` | `all` | `all` matches the Search Console dashboard. `final` shows only confirmed data (2–3 days behind) |
 | `WSP_ALLOW_WRITES` | `false` | `true` turns on the write tools. Run `wsp_login_again_gsc` after changing it |
@@ -239,7 +228,8 @@ Then use that path as `"command"`, e.g. `"/Users/you/.nvm/versions/node/v22.0.0/
 <details>
 <summary><strong>Login failed or file not found</strong></summary>
 
-- Use the **full path** to the file. `~/` works, but a bare name like `client_secrets.json` doesn't.
+- File paths must be **full paths**. `~/` works, but a bare file name doesn't.
+- Check `WSP_CLIENT_ID` and `WSP_CLIENT_SECRET` for typos or extra spaces.
 - If you set `WSP_OAUTH_FILE` or `WSP_SERVICE_ACCOUNT_FILE`, the file must exist. The server stops and names the setting if it can't find it.
 - Seeing `invalid_grant` or want another Google account? Run `wsp_login_again_gsc`.
 - Changed `WSP_ALLOW_WRITES`? Run `wsp_login_again_gsc`.
