@@ -4,6 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/google-gsc-mcp)](https://www.npmjs.com/package/google-gsc-mcp)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.bilalnaseer%2Fgoogle--gsc--mcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.bilalnaseer/google-gsc-mcp)
 [![license](https://img.shields.io/github/license/bilalnaseer/google-search-console-mcp)](LICENSE)
+[![bilalnaseer/google-search-console-mcp MCP server](https://glama.ai/mcp/servers/bilalnaseer/google-search-console-mcp/badges/score.svg)](https://glama.ai/mcp/servers/bilalnaseer/google-search-console-mcp)
 
 Talk to your [Google Search Console](https://search.google.com/search-console/about) data in plain English from Claude, Cursor, Codex, Gemini CLI or any other MCP app.
 
